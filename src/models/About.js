@@ -1,61 +1,93 @@
-const { default: mongoose } = require("mongoose");
-const Schema = require("mongoose");
+const { Schema, model } = require("mongoose");
 const validator = require("validator");
 
-const AboutSchema = new Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true,
-    minLength: 3,
-    maxLength: 50,
-  },
-  title: { type: String, minLength: 3, trim: true, maxLength: 100 },
-  subTitle: { type: String, trim: true, maxLength: 150 },
-  description: { type: String, trim: true, maxLength: 500 },
-  quote: { type: String, trim: true, maxLength: 200 },
-  exp_year: { type: Number, min: 0 },
-  address: { type: String, trim: true, maxLength: 200 },
-  some_total: { type: Number, min: 0 },
-  phoneNumber: {
-    type: String,
-    validate(value) {
-      if (validator.isMobilePhone(value))
-        throw new Error({ message: "Phone No is not valid", status: 400 });
+const AboutSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+      minLength: [3, "Name must be at least 3 characters"],
+      maxLength: [50, "Name must be less than 50 characters"],
     },
-  },
-  contactEmail: {
-    type: String,
-    trim: true,
-    lowercase: true,
-    default: function () {
-      return this.email;
+    title: {
+      type: String,
+      trim: true,
+      minLength: [3, "Title must be at least 3 characters"],
+      maxLength: [100, "Title must be less than 100 characters"],
     },
-    validate(value) {
-      if (!validator.isEmail(value))
-        throw new Error({ message: "Email is not valid", status: 400 });
+    subTitle: {
+      type: String,
+      trim: true,
+      maxLength: [150, "Subtitle must be less than 150 characters"],
     },
-  },
-  avatar: {
-    public_id: { type: String },
-    url: {
+    description: {
+      type: String,
+      trim: true,
+      maxLength: [500, "Description must be less than 500 characters"],
+    },
+    quote: {
+      type: String,
+      trim: true,
+      maxLength: [200, "Quote must be less than 200 characters"],
+    },
+    exp_year: {
+      type: Number,
+      min: [0, "Experience years cannot be less than 0"],
+    },
+    address: {
+      type: String,
+      trim: true,
+      maxLength: [200, "Address must be less than 200 characters"],
+    },
+    some_total: {
+      type: Number,
+      min: [0, "Total cannot be less than 0"],
+    },
+    phoneNumber: {
       type: String,
       validate(value) {
-        if (!validator.isURL(value))
-          throw new Error({ message: "URL is not valid", status: 400 });
+        if (!validator.isMobilePhone(value, "any", { strictMode: false })) {
+          throw new Error("Phone number is not valid");
+        }
+      },
+    },
+    contactEmail: {
+      type: String,
+      trim: true,
+      lowercase: true,
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error("Email is not valid");
+        }
+      },
+    },
+    avatar: {
+      public_id: { type: String },
+      url: {
+        type: String,
+        validate(value) {
+          if (!validator.isURL(value)) {
+            throw new Error("Avatar URL is not valid");
+          }
+        },
+      },
+    },
+    alternateAvatars: {
+      public_id: { type: String },
+      url: {
+        type: String,
+        validate(value) {
+          if (!validator.isURL(value)) {
+            throw new Error("Alternate avatar URL is not valid");
+          }
+        },
       },
     },
   },
-  alternateAvatars: {
-    public_id: { type: String },
-    url: {
-      type: String,
-      validate(value) {
-        if (!validator.isURL(value))
-          throw new Error({ message: "URL is not valid", status: 400 });
-      },
-    },
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
-module.exports = mongoose.model("About", AboutSchema);
+module.exports = model("About", AboutSchema);

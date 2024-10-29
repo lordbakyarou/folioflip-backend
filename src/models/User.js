@@ -1,35 +1,44 @@
-const { Schema, default: mongoose } = require("mongoose");
+const { Schema, model } = require("mongoose");
 const validator = require("validator");
 
 const UserSchema = new Schema(
   {
     username: {
       type: String,
-      required: true,
+      required: [true, "Username is required"],
       unique: true,
-      minLength: 3,
-      maxLength: 50,
+      minLength: [3, "Username must be at least 3 characters long"],
+      maxLength: [50, "Username must be less than 50 characters long"],
       trim: true,
     },
     email: {
       type: String,
-      required: true,
+      required: [true, "Email is required"],
       unique: true,
       trim: true,
       lowercase: true,
-      validate(value) {
-        if (!validator.isEmail(value))
-          throw new Error({ message: "Email is not valid", status: 400 });
+      validate: {
+        validator: (value) => validator.isEmail(value),
+        message: "Email is not valid",
+      },
+    },
+    password: {
+      type: String,
+      required: [true, "Password is required"],
+      trim: true,
+      minLength: [8, "Password must be at least 8 characters long"],
+      validate: {
+        validator: (value) => validator.isStrongPassword(value),
+        message: "Please enter a strong password",
       },
     },
     role: {
       type: String,
-      enum: { values: ["admin", "user"], message: `{VALUE} is incorrect` },
+      enum: {
+        values: ["admin", "user"],
+        message: `{VALUE} is not a valid role`,
+      },
       default: "user",
-    },
-    about: {
-      type: Schema.Types.ObjectId,
-      ref: "About",
     },
   },
   {
@@ -37,4 +46,4 @@ const UserSchema = new Schema(
   }
 );
 
-module.exports = mongoose.model("User", UserSchema);
+module.exports = model("User", UserSchema);
