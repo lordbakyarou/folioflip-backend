@@ -76,7 +76,7 @@ Here is a quick overview of the main API endpoints:
 FolioFlip/
 ├── src/                   # Backend files
 │   ├── models/               # Database schemas for sections
-│   ├── routes/               # API routes
+│   ├── routers/              # API routes
 │   ├── controllers/          # Route handlers
 │   └── utils/                # Utility functions (e.g., encryption)
 ├── .env                      # Environment variables
