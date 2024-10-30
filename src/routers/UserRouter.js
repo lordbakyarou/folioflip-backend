@@ -2,8 +2,8 @@ const express = require("express");
 
 const UserRouter = express.Router();
 
-//Signup route
-UserRouter.post("/signup", async (req, res) => {
+//Register route
+UserRouter.post("/register", async (req, res) => {
   try {
     const data = req.body;
     console.log(data);
