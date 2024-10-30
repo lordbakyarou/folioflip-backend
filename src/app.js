@@ -1,7 +1,7 @@
 const express = require("express");
 const connectDB = require("./config/database.js");
 const mongoose = require("mongoose");
-const UserRouter = require("./routers/UserRouter.js");
+const AuthRouter = require("./routers/AuthRouter.js");
 require("dotenv").config();
 
 // const validator = require("validator");
@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 8888;
 app.use(express.json());
 
 //routers
-app.use("/auth", UserRouter);
+app.use("/auth", AuthRouter);
 
 //connect DB
 connectDB()

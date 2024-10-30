@@ -1,5 +1,8 @@
 const { Schema, model } = require("mongoose");
 const validator = require("validator");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+require("dotenv").config();
 
 const UserSchema = new Schema(
   {
@@ -31,6 +34,7 @@ const UserSchema = new Schema(
         validator: (value) => validator.isStrongPassword(value),
         message: "Please enter a strong password",
       },
+      select: false,
     },
     role: {
       type: String,
@@ -45,5 +49,16 @@ const UserSchema = new Schema(
     timestamps: true,
   }
 );
+
+UserSchema.methods.getJWT = function () {
+  const token = jwt.sign({ _id: this._id }, process.env.SECRET, {
+    expiresIn: "1d",
+  });
+  return token;
+};
+
+UserSchema.methods.validatePassword = async function (password) {
+  return await bcrypt.compare(password, this.password);
+};
 
 module.exports = model("User", UserSchema);
