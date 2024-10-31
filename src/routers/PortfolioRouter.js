@@ -45,14 +45,22 @@ PortfolioRouter.post(
         portfolioName,
         userId: req.user._id,
       });
-      //create about
-      await createAbout({ about, portfolioId });
-      await createTimeline({ timeline, portfolioId });
-      await createSkill({ skills, portfolioId });
-      await createProject({ projects, portfolioId });
-      await createSocialHandle({ social_handles, portfolioId });
-      await createService({ services, portfolioId });
-      await createTestimonial({ testimonials, portfolioId });
+
+      await Promise.all([
+        createAbout({ about, portfolioId }),
+        timeline
+          ? createTimeline({ timeline, portfolioId })
+          : Promise.resolve(),
+        skills ? createSkill({ skills, portfolioId }) : Promise.resolve(),
+        projects ? createProject({ projects, portfolioId }) : Promise.resolve(),
+        social_handles
+          ? createSocialHandle({ social_handles, portfolioId })
+          : Promise.resolve(),
+        services ? createService({ services, portfolioId }) : Promise.resolve(),
+        testimonials
+          ? createTestimonial({ testimonials, portfolioId })
+          : Promise.resolve(),
+      ]);
 
       res.status(200).json("Working");
     } catch (error) {

@@ -3,7 +3,7 @@ const Timeline = require("../models/Timeline");
 
 const createTimeline = ({ timeline, portfolioId }) => {
   return new Promise(async (res, rej) => {
-    const timelinesWithPortfolioId = timeline.map((t) => ({
+    const timelinesWithPortfolioId = timeline?.map((t) => ({
       ...t,
       portfolioId,
     }));
