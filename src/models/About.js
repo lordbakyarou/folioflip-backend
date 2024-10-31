@@ -78,17 +78,19 @@ const AboutSchema = new Schema(
         },
       },
     },
-    alternateAvatars: {
-      public_id: { type: String },
-      url: {
-        type: String,
-        validate(value) {
-          if (!validator.isURL(value)) {
-            throw new Error("Alternate avatar URL is not valid");
-          }
+    alternateAvatars: [
+      {
+        public_id: { type: String },
+        url: {
+          type: String,
+          validate(value) {
+            if (!validator.isURL(value)) {
+              throw new Error("Alternate avatar URL is not valid");
+            }
+          },
         },
       },
-    },
+    ],
   },
   {
     timestamps: true,

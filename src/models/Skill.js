@@ -3,11 +3,6 @@ const validator = require("validator");
 
 const SkillSchema = new Schema(
   {
-    userId: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: [true, "User ID is required"],
-    },
     portfolioId: {
       type: Schema.Types.ObjectId,
       ref: "Portfolio",
@@ -21,7 +16,7 @@ const SkillSchema = new Schema(
       type: String,
       required: [true, "Skill name is required"],
       trim: true,
-      minLength: [2, "Skill name must be at least 2 characters"],
+      minLength: [1, "Skill name must be at least 1 characters"],
       maxLength: [50, "Skill name must be less than 50 characters"],
     },
     sequence: {

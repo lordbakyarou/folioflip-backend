@@ -10,6 +10,11 @@ const PortfolioSchema = new Schema(
       minLength: [3, "Name must be at least 3 characters"],
       maxLength: [50, "Name must be less than 50 characters"],
     },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: [true, "User ID is required"],
+    },
   },
   {
     timestamps: true,

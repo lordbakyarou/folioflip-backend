@@ -3,11 +3,6 @@ const validator = require("validator");
 
 const ProjectSchema = new Schema(
   {
-    userId: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: [true, "User ID is required"],
-    },
     portfolioId: {
       type: Schema.Types.ObjectId,
       ref: "Portfolio",

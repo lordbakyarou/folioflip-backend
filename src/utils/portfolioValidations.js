@@ -247,9 +247,9 @@ const skillsValidation = (skill) => {
       // Validate skill name
       if (
         !skill?.name ||
-        !validator.isLength(skill?.name, { min: 2, max: 50 })
+        !validator.isLength(skill?.name, { min: 1, max: 50 })
       ) {
-        throw new Error("Skill name between 3 and 50 characters long");
+        throw new Error("Skill name between 1 and 50 characters long");
       }
 
       // Validate percentage

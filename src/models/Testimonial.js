@@ -3,11 +3,6 @@ const validator = require("validator");
 
 const TestimonialSchema = new Schema(
   {
-    userId: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: [true, "User ID is required"],
-    },
     portfolioId: {
       type: Schema.Types.ObjectId,
       ref: "Portfolio",
@@ -58,4 +53,4 @@ const TestimonialSchema = new Schema(
   }
 );
 
-module.exports = mongoose.model("Testimonial", TestimonialSchema);
+module.exports = model("Testimonial", TestimonialSchema);
