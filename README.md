@@ -68,7 +68,7 @@ FolioFlip is a customizable portfolio-building platform that allows users to cre
 
 ## API Documentation
 Here is a quick overview of the main API endpoints:
-- `POST /auth/signup` - Signup a new user
+- `POST /auth/register` - Register a new user
 - `POST /auth/login` - Login user and receive token
 
 ## Project Structure
@@ -76,7 +76,7 @@ Here is a quick overview of the main API endpoints:
 FolioFlip/
 ├── src/                   # Backend files
 │   ├── models/               # Database schemas for sections
-│   ├── routes/               # API routes
+│   ├── routers/              # API routes
 │   ├── controllers/          # Route handlers
 │   └── utils/                # Utility functions (e.g., encryption)
 ├── .env                      # Environment variables
