@@ -1,19 +1,23 @@
 const express = require("express");
 const connectDB = require("./config/database.js");
 const mongoose = require("mongoose");
+const cookieParser = require("cookie-parser");
 const AuthRouter = require("./routers/AuthRouter.js");
+const PortfolioRouter = require("./routers/PortfolioRouter.js");
 require("dotenv").config();
 
-// const validator = require("validator");
+const validator = require("validator");
 
 const app = express();
 const PORT = process.env.PORT || 8888;
 
 //middlewares
 app.use(express.json());
+app.use(cookieParser());
 
 //routers
 app.use("/auth", AuthRouter);
+app.use("/portfolio", PortfolioRouter);
 
 //connect DB
 connectDB()

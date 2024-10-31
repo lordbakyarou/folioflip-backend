@@ -9,6 +9,11 @@ const SocialHandlesSchema = new Schema(
       ref: "User",
       required: [true, "User ID is required"],
     },
+    portfolioId: {
+      type: Schema.Types.ObjectId,
+      ref: "Portfolio",
+      required: [true, "User ID is required"],
+    },
     platform: {
       type: String,
       required: [true, "Platform is required"],

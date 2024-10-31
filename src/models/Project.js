@@ -8,6 +8,11 @@ const ProjectSchema = new Schema(
       ref: "User",
       required: [true, "User ID is required"],
     },
+    portfolioId: {
+      type: Schema.Types.ObjectId,
+      ref: "Portfolio",
+      required: [true, "User ID is required"],
+    },
     liveurl: {
       type: String,
       required: [true, "Live URL is required"],

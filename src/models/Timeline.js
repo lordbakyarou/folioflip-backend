@@ -8,6 +8,11 @@ const TimelineSchema = new Schema(
       ref: "User",
       required: [true, "User ID is required"],
     },
+    portfolioId: {
+      type: Schema.Types.ObjectId,
+      ref: "Portfolio",
+      required: [true, "User ID is required"],
+    },
     company_name: {
       type: String,
       required: [true, "Company name is required"],

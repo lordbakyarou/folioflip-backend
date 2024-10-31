@@ -3,46 +3,13 @@ const { Schema, model } = require("mongoose");
 //Not sure if to use these schema design? TBD
 const PortfolioSchema = new Schema(
   {
-    about: {
-      type: Schema.Types.ObjectId,
-      ref: "About",
+    portfolioName: {
+      type: String,
+      required: true,
+      trim: true,
+      minLength: [3, "Name must be at least 3 characters"],
+      maxLength: [50, "Name must be less than 50 characters"],
     },
-    projects: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Project", // Reference to Project model
-      },
-    ],
-    timelines: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Timeline", // Reference to Timeline model
-      },
-    ],
-    socialHandles: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "SocialHandle", // Reference to SocialHandle model
-      },
-    ],
-    services: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Service", // Reference to Service model
-      },
-    ],
-    skills: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Skill", // Reference to Skill model
-      },
-    ],
-    testimonials: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Testimonial", // Reference to Testimonial model
-      },
-    ],
   },
   {
     timestamps: true,

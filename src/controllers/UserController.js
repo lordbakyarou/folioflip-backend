@@ -34,4 +34,16 @@ const findUserWithLoginId = (loginId, getPassword = false) => {
   });
 };
 
-module.exports = { createUser, findUserWithLoginId };
+const findUserWithId = (_id, getPassword = false) => {
+  return new Promise(async (res, rej) => {
+    try {
+      const user = await User.findById(_id).select(getPassword && "+password");
+
+      res(user);
+    } catch (error) {
+      rej({ message: error.message });
+    }
+  });
+};
+
+module.exports = { createUser, findUserWithLoginId, findUserWithId };
