@@ -47,7 +47,11 @@ const AboutSchema = new Schema(
     phoneNumber: {
       type: String,
       validate(value) {
-        if (!validator.isMobilePhone(value, "any", { strictMode: false })) {
+        if (
+          !validator.isMobilePhone(value, "any", {
+            strictMode: false,
+          })
+        ) {
           throw new Error("Phone number is not valid");
         }
       },

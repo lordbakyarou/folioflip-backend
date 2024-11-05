@@ -3,11 +3,6 @@ const validator = require("validator");
 
 const ProjectSchema = new Schema(
   {
-    portfolioId: {
-      type: Schema.Types.ObjectId,
-      ref: "Portfolio",
-      required: [true, "User ID is required"],
-    },
     liveurl: {
       type: String,
       required: [true, "Live URL is required"],
@@ -29,7 +24,7 @@ const ProjectSchema = new Schema(
       required: [true, "Project title is required"],
       trim: true,
       minLength: [3, "Project title must be at least 3 characters"],
-      maxLength: [100, "Project title must be less than 50 characters"],
+      maxLength: [50, "Project title must be less than 50 characters"],
     },
     sequence: {
       type: Number,
@@ -39,6 +34,7 @@ const ProjectSchema = new Schema(
     image: {
       public_id: {
         type: String,
+        required: [true, "Image public ID is required"],
       },
       url: {
         type: String,

@@ -3,11 +3,6 @@ const validator = require("validator");
 
 const SkillSchema = new Schema(
   {
-    portfolioId: {
-      type: Schema.Types.ObjectId,
-      ref: "Portfolio",
-      required: [true, "User ID is required"],
-    },
     enabled: {
       type: Boolean,
       default: true,
@@ -33,6 +28,7 @@ const SkillSchema = new Schema(
     image: {
       public_id: {
         type: String,
+        required: [true, "Image public ID is required"],
         trim: true,
       },
       url: {
