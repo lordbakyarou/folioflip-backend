@@ -14,7 +14,7 @@ const AboutSchema = new Schema(
       type: String,
       trim: true,
       minLength: [3, "Title must be at least 3 characters"],
-      maxLength: [100, "Title must be less than 100 characters"],
+      maxLength: [50, "Title must be less than 50 characters"],
     },
     subTitle: {
       type: String,
