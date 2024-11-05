@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const AuthRouter = require("./routers/AuthRouter.js");
 const PortfolioRouter = require("./routers/PortfolioRouter.js");
+const { sendErrorResponse } = require("./utils/customResponse.js");
+
 require("dotenv").config();
 
 const validator = require("validator");
@@ -19,6 +21,11 @@ app.use(cookieParser());
 app.use("/auth", AuthRouter);
 app.use("/portfolio", PortfolioRouter);
 
+//error handling middleware
+app.use((err, req, res, next) => {
+  sendErrorResponse(res, err); // Send the error response
+});
+
 //connect DB
 connectDB()
   .then(() => {
@@ -31,7 +38,6 @@ connectDB()
 
 //Handle gracefull shutdown
 let gracefulExit = function () {
-  console.log("hi");
   mongoose.connection.close(function () {
     console.log(
       "Mongoose default connection is disconnected through app termination"

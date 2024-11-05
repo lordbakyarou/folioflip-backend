@@ -6,6 +6,18 @@ const authValidation = (validationVariables, allowedValidationFields) => {
       const value = validationVariables[key] || "";
 
       if (allowedValidationFields.includes(key)) {
+        if (key === "loginId") {
+          return (
+            (!validator.isEmail(value) ||
+              value.length < 3 ||
+              value.length > 50) &&
+            rej({
+              status: 400,
+              message: "Invalid loginId",
+            })
+          );
+        }
+
         if (key === "email") {
           return (
             !validator.isEmail(value) &&
@@ -30,6 +42,7 @@ const authValidation = (validationVariables, allowedValidationFields) => {
         }
         if (key === "role") {
           return (
+            value &&
             !["admin", "user"].includes(value) &&
             rej({ status: 400, message: "Invalid role" })
           );
