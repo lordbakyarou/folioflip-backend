@@ -29,7 +29,7 @@ const ProjectSchema = new Schema(
       required: [true, "Project title is required"],
       trim: true,
       minLength: [3, "Project title must be at least 3 characters"],
-      maxLength: [50, "Project title must be less than 50 characters"],
+      maxLength: [100, "Project title must be less than 50 characters"],
     },
     sequence: {
       type: Number,
@@ -39,7 +39,6 @@ const ProjectSchema = new Schema(
     image: {
       public_id: {
         type: String,
-        required: [true, "Image public ID is required"],
       },
       url: {
         type: String,

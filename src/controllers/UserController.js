@@ -1,49 +1,68 @@
-const mongoose = require("mongoose");
-const User = require("../models/User");
+const authValidation = require("../utils/authValidations");
+const { sendSuccessResponse } = require("../utils/customResponse");
+const { UserService } = require("../services");
 
-const createUser = ({ username, email, password, role }) => {
-  return new Promise(async (res, rej) => {
-    try {
-      const newUser = new User({
-        username,
-        email,
-        password,
-        role,
-      });
+const registerUser = async (req, res, next) => {
+  try {
+    //validate user data
+    const { username, email, password, role } = req.body;
 
-      const data = await newUser.save();
+    await authValidation({ username, email, password, role }, [
+      "username",
+      "email",
+      "password",
+      "role",
+    ]);
 
-      res(data);
-    } catch (error) {
-      rej({ message: error.message });
-    }
-  });
+    //register the user
+    const data = await UserService.registerUser({
+      username,
+      email,
+      password,
+      role,
+    });
+
+    sendSuccessResponse({
+      res,
+      data,
+      message: "User registered successfully",
+      statusCode: 201,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
-const findUserWithLoginId = (loginId, getPassword = false) => {
-  return new Promise(async (res, rej) => {
-    try {
-      const user = await User.findOne({
-        $or: [{ email: { $in: loginId } }, { username: { $in: loginId } }],
-      }).select(getPassword && "+password");
+const loginUser = async (req, res, next) => {
+  try {
+    const { loginId, password } = req.body;
+    await authValidation({ loginId, password }, ["loginId", "password"]);
 
-      res(user);
-    } catch (error) {
-      rej({ message: error.message });
-    }
-  });
+    const data = await UserService.loginUser({ loginId, password });
+
+    const token = data.getJWT();
+    res.cookie("token", token, {
+      expires: new Date(Date.now() + 86400000),
+      httpOnly: true,
+    });
+
+    sendSuccessResponse({ res, data, message: "User logged in successfully" });
+  } catch (error) {
+    next(error);
+  }
 };
 
-const findUserWithId = (_id, getPassword = false) => {
-  return new Promise(async (res, rej) => {
-    try {
-      const user = await User.findById(_id).select(getPassword && "+password");
-
-      res(user);
-    } catch (error) {
-      rej({ message: error.message });
-    }
-  });
+const logoutUser = async (req, res, next) => {
+  try {
+    res.cookie("token", null, { expires: new Date(Date.now()) });
+    sendSuccessResponse({
+      res,
+      data: {},
+      message: "User logged out successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
-module.exports = { createUser, findUserWithLoginId, findUserWithId };
+module.exports = { registerUser, loginUser, logoutUser };

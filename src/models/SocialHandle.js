@@ -13,7 +13,7 @@ const SocialHandlesSchema = new Schema(
       type: String,
       required: [true, "Platform is required"],
       trim: true,
-      minLength: [2, "Platform name must be at least 2 characters"],
+      minLength: [1, "Platform name must be at least 1 characters"],
       maxLength: [50, "Platform name must be less than 50 characters"],
     },
     url: {
@@ -27,7 +27,6 @@ const SocialHandlesSchema = new Schema(
     image: {
       public_id: {
         type: String,
-        required: [true, "Image public ID is required"],
       },
       url: {
         type: String,

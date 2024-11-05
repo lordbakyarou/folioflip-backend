@@ -5,84 +5,28 @@ const {
   createUser,
   findUserWithLoginId,
 } = require("../controllers/UserController");
+const { sendSuccessResponse } = require("../utils/customResponse");
+const { UserController } = require("../controllers");
 
 const AuthRouter = express.Router();
 
 //Register route
-AuthRouter.post("/register", async (req, res) => {
-  try {
-    const { username, email, password, role } = req.body;
-
-    //validations of variables
-    await authValidation({ username, email, password, role }, [
-      "username",
-      "email",
-      "password",
-      "role",
-    ]);
-
-    //password hashed
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const existingUser = await findUserWithLoginId([email, username]);
-
-    //Check if user already exists
-    if (existingUser) return res.status(400).json("User already exists");
-
-    const data = await createUser({
-      username,
-      email,
-      password: hashedPassword,
-      role,
-    });
-
-    res.status(201).json({ message: "User created succesfully", data });
-  } catch (error) {
-    res
-      .status(error?.status || 500)
-      .json(error?.message || "Internal server Error");
-  }
-});
+AuthRouter.post("/register", UserController.registerUser);
 
 //Login route
-AuthRouter.post("/login", async (req, res) => {
-  try {
-    const { loginId, password } = req.body;
-
-    //fetch data with password
-    const user = await findUserWithLoginId(loginId, true);
-    if (!user) return res.status(404).json("User not found");
-
-    //compare password
-    const comparePassword = await user.validatePassword(password);
-    if (!comparePassword) return res.status(401).json("Invalid password");
-
-    //create token
-    const token = await user.getJWT();
-
-    //set cookie
-    res.cookie("token", token, {
-      expires: new Date(Date.now() + 86400000),
-      httpOnly: true,
-    });
-
-    res.status(200).json("User logged in");
-  } catch (error) {
-    res
-      .status(error?.status || 500)
-      .json(error?.message || "Internal server Error");
-  }
-});
+AuthRouter.post("/login", UserController.loginUser);
 
 //Logout route
 AuthRouter.get("/logout", async (req, res) => {
   try {
     //expire cookie
     res.cookie("token", null, { expires: new Date(Date.now()) });
-    res.status(200).json("User logged out");
+    sendSuccessResponse({
+      res,
+      message: "User logged out succesfully",
+    });
   } catch (error) {
-    res
-      .status(error?.status || 500)
-      .json(error?.message || "Internal server Error");
+    next(error);
   }
 });
 

@@ -11,7 +11,6 @@ const TestimonialSchema = new Schema(
     image: {
       public_id: {
         type: String,
-        required: [true, "Image public ID is required"],
       },
       url: {
         type: String,
@@ -26,7 +25,7 @@ const TestimonialSchema = new Schema(
       type: String,
       required: [true, "Name is required"],
       trim: true,
-      minLength: [2, "Name must be at least 2 characters"],
+      minLength: [1, "Name must be at least 1 characters"],
       maxLength: [50, "Name must be less than 50 characters"],
     },
     review: {
@@ -40,7 +39,7 @@ const TestimonialSchema = new Schema(
       type: String,
       required: [true, "Position is required"],
       trim: true,
-      minLength: [2, "Position must be at least 2 characters"],
+      minLength: [1, "Position must be at least 1 characters"],
       maxLength: [50, "Position must be less than 50 characters"],
     },
     enabled: {

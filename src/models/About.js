@@ -3,11 +3,6 @@ const validator = require("validator");
 
 const AboutSchema = new Schema(
   {
-    portfolioId: {
-      type: Schema.Types.ObjectId,
-      ref: "Portfolio",
-      required: [true, "User ID is required"],
-    },
     name: {
       type: String,
       required: true,

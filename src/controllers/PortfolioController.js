@@ -15,4 +15,18 @@ const createPortfolio = ({ portfolioName, userId }) => {
   });
 };
 
-module.exports = { createPortfolio };
+const findPortfolio = ({ portfolioId }) => {
+  return new Promise(async (res, rej) => {
+    try {
+      const portfolio = await Portfolio.findById(portfolioId).populate(
+        "userId",
+        "username email role"
+      );
+      res(portfolio);
+    } catch (error) {
+      rej({ message: error?.message });
+    }
+  });
+};
+
+module.exports = { createPortfolio, findPortfolio };

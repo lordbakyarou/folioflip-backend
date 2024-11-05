@@ -33,7 +33,6 @@ const SkillSchema = new Schema(
     image: {
       public_id: {
         type: String,
-        required: [true, "Image public ID is required"],
         trim: true,
       },
       url: {

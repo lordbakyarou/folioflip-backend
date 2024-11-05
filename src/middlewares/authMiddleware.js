@@ -1,7 +1,10 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User.js");
-const { findUserWithId } = require("../controllers/UserController.js");
+const UserController = require("../controllers");
+const CURDRepository = require("../repository/CURDRepository.js");
 require("dotenv").config();
+
+const validateUserRepository = new CURDRepository(User);
 
 const validateUserMiddleware = async (req, res, next) => {
   try {
@@ -10,7 +13,7 @@ const validateUserMiddleware = async (req, res, next) => {
     if (!token) return res.status(401).json("Invalid token");
 
     const { _id } = await jwt.verify(token, process.env.SECRET);
-    const user = await findUserWithId(_id);
+    const user = await validateUserRepository.findById(_id);
     if (!user) return res.status(404).json("User not found");
 
     req.user = user;
