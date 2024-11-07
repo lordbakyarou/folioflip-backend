@@ -11,20 +11,21 @@ const isNumber = (value) => typeof value === "number";
 
 const isBoolean = (value) => typeof value === "boolean";
 
-const isLength = (value, min = 0, max = 1000) =>
-  validator.isLength(value, { min, max });
+const isLength = (value, min = 0, max = 1000) => value >= min && value <= max;
 
 const isMobilePhone = (value) => validator.isMobilePhone(value, "any");
 
 const isEmail = (value) => validator.isEmail(value);
 
-const isURL = (value) => validator.isURL(value);
+const isURL = (value) => value && validator.isURL(value);
 
 const isDate = (value) => validator.isISO8601(value);
 
 const isValidPercentage = (value) => value > 0 && value < 100;
 
 const isStrongPassword = (value) => validator.isStrongPassword(value);
+
+const checkInObject = (value, object) => value in object;
 
 module.exports = {
   isArray,
@@ -39,4 +40,5 @@ module.exports = {
   isDate,
   isValidPercentage,
   isStrongPassword,
+  checkInObject,
 };

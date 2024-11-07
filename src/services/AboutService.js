@@ -21,7 +21,7 @@ const createAbout = async ({ about }) => {
 
 const findAbout = async ({ aboutId }) => {
   try {
-    const data = await aboutRepository.findWithId(aboutId);
+    const data = await aboutRepository.findById(aboutId);
 
     if (!data) throw new NotFound("About data not found");
 

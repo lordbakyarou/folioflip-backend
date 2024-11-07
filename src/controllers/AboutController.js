@@ -41,7 +41,7 @@ const updateAbout = async (req, res, next) => {
   try {
     const { about, aboutId } = req.body;
 
-    await portfolioValidations(about, Object.keys(about));
+    portfolioValidations({ about });
 
     const data = await AboutService.updateAbout({ about, aboutId });
     sendSuccessResponse({

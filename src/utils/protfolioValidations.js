@@ -10,6 +10,7 @@ const {
   isArray,
   isBoolean,
   isValidPercentage,
+  checkInObject,
 } = require("./commonUtils");
 
 const portfolioValidations = ({
@@ -22,7 +23,7 @@ const portfolioValidations = ({
   services,
   testimonials,
 }) => {
-  if (!portfolioName || !isLength(portfolioName, 3, 50)) {
+  if (!!portfolioName && !isLength(portfolioName, 3, 50)) {
     throw new BadRequest("Portfolio name must be between 3 & 50");
   }
 
@@ -54,53 +55,71 @@ const aboutValidation = (about) => {
   // Check if the about section exists
   if (!about) throw new BadRequest("About section is required");
   // Validate name
-  if (!about?.name || !isLength(about?.name, 3, 50)) {
+
+  if (checkInObject("name", about) && !isLength(about?.name, 3, 50)) {
     throw new BadRequest("About name must be between 3 and 50 characters long");
   }
   // Validate title
-  if (about?.title && !isLength(about?.title, 3, 100)) {
+  if (checkInObject("title", about) && !isLength(about?.title, 3, 100)) {
     throw new BadRequest("Title must be between 3 and 100 characters long");
   }
   // Validate subtitle
-  if (about?.subTitle && !isLength(about?.subTitle, 0, 150)) {
+  if (checkInObject("subTitle", about) && !isLength(about?.subTitle, 0, 150)) {
     throw new BadRequest("Subtitle must be less than 150 characters long");
   }
   // Validate description
-  if (about?.description && !isLength(about?.description, 0, 500)) {
+  if (
+    checkInObject("description", about) &&
+    !isLength(about?.description, 0, 500)
+  ) {
     throw new BadRequest("Description must be less than 500 characters long");
   }
   // Validate quote
-  if (about?.quote && !isLength(about?.quote, 0, 200)) {
+  if (checkInObject("quote", about) && !isLength(about?.quote, 0, 200)) {
     throw new BadRequest("Quote must be less than 200 characters long");
   }
   // Validate experience years
-  if (!isNumber(about?.exp_year) || about?.exp_year < 0) {
+  if (
+    checkInObject("exp_year", about) &&
+    (!isNumber(about?.exp_year) || about?.exp_year < 0)
+  ) {
     throw new BadRequest("Experience years cannot be less than 0");
   }
   // Validate address
-  if (about?.address && !isLength(about?.address, 0, 200)) {
+  if (checkInObject("address", about) && !isLength(about?.address, 0, 200)) {
     throw new BadRequest("Address must be less than 200 characters long");
   }
   // Validate some_total
-  if (!isNumber(about?.some_total) || about?.some_total < 0) {
+  if (
+    checkInObject("some_total", about) &&
+    (!isNumber(about?.some_total) || about?.some_total < 0)
+  ) {
     throw new BadRequest("Total cannot be less than 0");
   }
   // Validate phone number
-  if (about?.phoneNumber && !isMobilePhone(about?.phoneNumber)) {
+  if (
+    checkInObject("phoneNumber", about) &&
+    !isMobilePhone(about?.phoneNumber)
+  ) {
     throw new BadRequest("Invalid phone number");
   }
   // Validate contact email
-  if (!isEmail(about?.contactEmail)) {
+  if (checkInObject("contactEmail", about) && !isEmail(about?.contactEmail)) {
     throw new BadRequest("Invalid contact email");
   }
+
   // Validate avatar URL
-  if (about?.avatar && about?.avatar.url && !isURL(about?.avatar.url)) {
+  if (
+    checkInObject("avatar", about) &&
+    !checkInObject("url", about.avatar) &&
+    !isURL(about?.avatar?.url)
+  ) {
     throw new BadRequest("Avatar URL is not valid");
   }
   // Validate alternate avatars
-  if (about?.alternateAvatars) {
+  if (checkInObject("alternateAvatars", about)) {
     about?.alternateAvatars.forEach((avatar, index) => {
-      if (avatar.url && !isURL(avatar?.url)) {
+      if (!checkInObject("url", avatar) && !isURL(avatar?.url)) {
         throw new BadRequest(
           `Alternate avatar URL at index ${index} is not valid`
         );

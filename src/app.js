@@ -36,6 +36,7 @@ app.use("/api", apiRouter);
 
 //error handling middleware
 app.use((err, req, res, next) => {
+  console.log(err);
   sendErrorResponse(res, err); // Send the error response
 });
 
