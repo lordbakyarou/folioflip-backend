@@ -37,7 +37,7 @@ const updateSkill = async ({ skill, skillId }) => {
   try {
     const data = await skillRepository.findOneAndUpdate(
       { _id: skillId },
-      { skill }
+      { $set: skill }
     );
 
     return data;

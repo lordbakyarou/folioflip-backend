@@ -202,27 +202,35 @@ const skillsValidation = (skill) => {
   // Check if the skill object exists
   if (!skill) throw new BadRequest("Skill section is required");
   // Validate skill name
-  if (!skill?.name || !isLength(skill?.name, 2, 50)) {
-    throw new BadRequest("Skill name between 3 and 50 characters long");
+  if (checkInObject("name", skill) && !isLength(skill?.name, 1, 50)) {
+    throw new BadRequest("Skill name between 1 and 50 characters long");
   }
   // Validate percentage
-  if (!isNumber(skill?.percentage) || isValidPercentage(skill?.percentage)) {
+  if (
+    checkInObject("percentage", skill) &&
+    !isNumber(skill?.percentage) &&
+    isValidPercentage(skill?.percentage)
+  ) {
     throw new BadRequest("Skill percentage must be between 0 and 100");
   }
   // Validate sequence
-  if (!isNumber(skill?.sequence) || skill?.sequence < 1) {
+  if (
+    checkInObject("sequence", skill) &&
+    !isNumber(skill?.sequence) &&
+    skill?.sequence < 1
+  ) {
     throw new BadRequest("Sequence must be at least 1");
   }
   // Validate image URL
-  if (!skill?.image || !skill?.image?.url || !isURL(skill?.image.url)) {
+  if (
+    checkInObject("image", skill) &&
+    !checkInObject("url", skill.image) &&
+    !isURL(skill?.image?.url)
+  ) {
     throw new BadRequest("Image URL is required and must be a valid URL");
   }
-  // Validate image public ID
-  if (!skill?.image?.public_id) {
-    throw new BadRequest("Image public ID is required");
-  }
   // Validate boolean fields
-  if (!isBoolean(skill?.enabled)) {
+  if (checkInObject("enabled", skill) && !isBoolean(skill?.enabled)) {
     throw new BadRequest("Enabled must be a boolean value");
   }
 };
@@ -306,31 +314,31 @@ const serviceValidation = (service) => {
   // Check if the service object exists
   if (!service) throw new BadRequest("Service section is required");
   // Validate service name
-  if (!service?.name || !isLength(service?.name, 2)) {
+  if (checkInObject("name", service) && !isLength(service?.name, 2)) {
     throw new BadRequest("Service name must be at least 2 characters long");
   }
   // Validate charge
   if (
-    !service?.charge ||
+    checkInObject("charge", service) &&
     !validator.isCurrency(service?.charge, { allow_negatives: false })
   ) {
     throw new BadRequest("Invalid service charge format");
   }
   // Validate description
-  if (!service?.desc || !isLength(service?.desc, 10, 500)) {
+  if (checkInObject("desc", service) && !isLength(service?.desc, 10, 500)) {
     throw new BadRequest(
       "Description must be between 10 and 500 characters long"
     );
   }
-  // Validate image
-  if (!service?.image || !service?.image.public_id) {
-    throw new BadRequest("Image public ID is required");
-  }
-  if (!service?.image.url || !isURL(service?.image.url)) {
+  if (
+    checkInObject("image", service) &&
+    !checkInObject("url", service.image) &&
+    !isURL(service?.image?.url)
+  ) {
     throw new BadRequest("Image URL is required and must be a valid URL");
   }
   // Validate enabled field
-  if (!isBoolean(service?.enabled)) {
+  if (checkInObject("enabled", service) && !isBoolean(service?.enabled)) {
     throw new BadRequest("Enabled must be a boolean value");
   }
 };

@@ -37,7 +37,7 @@ const updateService = async ({ service, serviceId }) => {
   try {
     const data = await serviceRepository.findOneAndUpdate(
       { _id: serviceId },
-      { service }
+      { $set: service }
     );
 
     return data;

@@ -1,18 +1,14 @@
 const { BadRequest } = require("../errors/httpErrors");
 const { SkillService } = require("../services");
+const { isArray } = require("../utils/commonUtils");
+const { sendSuccessResponse } = require("../utils/customResponse");
+const { portfolioValidations } = require("../utils/protfolioValidations");
 
 const createSkill = async (req, res, next) => {
   try {
     const { skills } = req.body;
 
-    if (!Array.isArray(skills)) {
-      throw new BadRequest("Skills should be an array");
-    }
-
-    skills.map(async (skill) => {
-      // Validate each skill
-      portfolioValidations(skill);
-    });
+    portfolioValidations({ skills });
 
     const data = await SkillService.createSkill({ skills });
 
@@ -46,9 +42,12 @@ const updateSkill = async (req, res, next) => {
   try {
     const { skill, skillId } = req.body;
 
-    portfolioValidations(skill);
+    if (isArray(skill)) throw new BadRequest("Skill cannot be an array");
+
+    portfolioValidations({ skills: [skill] });
 
     const data = await SkillService.updateSkill({ skill, skillId });
+
     sendSuccessResponse({
       res,
       data,

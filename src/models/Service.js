@@ -33,10 +33,6 @@ const ServiceSchema = new Schema(
       default: true,
     },
     image: {
-      public_id: {
-        type: String,
-        required: [true, "Image public ID is required"],
-      },
       url: {
         type: String,
         required: [true, "Image URL is required"],

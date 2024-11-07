@@ -2,19 +2,15 @@ const mongoose = require("mongoose");
 const Service = require("../models/Service");
 const { BadRequest } = require("../errors/httpErrors");
 const { ServiceService } = require("../services");
+const { portfolioValidations } = require("../utils/protfolioValidations");
+const { sendSuccessResponse } = require("../utils/customResponse");
+const { isArray } = require("../utils/commonUtils");
 
 const createService = async (req, res, next) => {
   try {
     const { services } = req.body;
 
-    if (!Array.isArray(services)) {
-      throw new BadRequest("Services should be an array");
-    }
-
-    services.map(async (service) => {
-      // Validate each service
-      portfolioValidations(service);
-    });
+    portfolioValidations({ services });
 
     const data = await ServiceService.createService({
       services,
@@ -50,7 +46,11 @@ const updateService = async (req, res, next) => {
   try {
     const { service, serviceId } = req.body;
 
-    portfolioValidations(service);
+    if (isArray(service)) {
+      throw new BadRequest("Project cannot be an array");
+    }
+
+    portfolioValidations({ services: [service] });
 
     const data = await ServiceService.updateService({ service, serviceId });
     sendSuccessResponse({
