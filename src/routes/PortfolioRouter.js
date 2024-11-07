@@ -1,6 +1,6 @@
 const express = require("express");
 const validateUserMiddleware = require("../middlewares/authMiddleware");
-const { portfolioValidation } = require("../utils/portfolioValidations");
+const { portfolioValidation } = require("../utils/oldPortfolioValidations");
 const {
   createPortfolio,
   findPortfolio,

@@ -9,34 +9,13 @@ const createTimeline = async (req, res, next) => {
       throw new BadRequest("Timelines should be an array");
     }
 
-    const validatedTimelines = await Promise.all(
-      timelines.map(async (timeline) => {
-        const { enabled, image, name, review, position } = timeline;
-
-        // Create timeline object
-        const timelineData = {
-          enabled,
-          image,
-          name,
-          review,
-          position,
-        };
-
-        // Validate each timeline
-        await portfolioValidations(timeline, [
-          "enabled",
-          "image",
-          "name",
-          "review",
-          "position",
-        ]);
-
-        return timelineData;
-      })
-    );
+    timelines.map(async (timeline) => {
+      // Validate each timeline
+      portfolioValidations(timeline);
+    });
 
     const data = await TimelineService.createTimeline({
-      timelines: validatedTimelines,
+      timelines,
     });
 
     sendSuccessResponse({
@@ -69,7 +48,7 @@ const updateTimeline = async (req, res, next) => {
   try {
     const { timeline, timelineId } = req.body;
 
-    await portfolioValidations(timeline, Object.keys(timeline));
+    portfolioValidations(timeline);
 
     const data = await TimelineService.updateTimeline({
       timeline,

@@ -11,34 +11,13 @@ const createService = async (req, res, next) => {
       throw new BadRequest("Services should be an array");
     }
 
-    const validatedServices = await Promise.all(
-      services.map(async (service) => {
-        const { name, charge, desc, enabled, image } = service;
-
-        // Create service object
-        const serviceData = {
-          name,
-          charge,
-          desc,
-          enabled,
-          image,
-        };
-
-        // Validate each service
-        await portfolioValidations(service, [
-          "name",
-          "charge",
-          "desc",
-          "enabled",
-          "image",
-        ]);
-
-        return serviceData;
-      })
-    );
+    services.map(async (service) => {
+      // Validate each service
+      portfolioValidations(service);
+    });
 
     const data = await ServiceService.createService({
-      services: validatedServices,
+      services,
     });
 
     sendSuccessResponse({
@@ -71,7 +50,7 @@ const updateService = async (req, res, next) => {
   try {
     const { service, serviceId } = req.body;
 
-    await portfolioValidations(service, Object.keys(service));
+    portfolioValidations(service);
 
     const data = await ServiceService.updateService({ service, serviceId });
     sendSuccessResponse({

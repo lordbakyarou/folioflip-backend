@@ -5,6 +5,6 @@ const PortfolioRouter = require("./PortfolioRouter");
 const apiRouter = express.Router();
 
 apiRouter.use("/auth", AuthRouter);
-apiRouter.use("/user", PortfolioRouter);
+apiRouter.use("/portfolio", PortfolioRouter);
 
 module.exports = apiRouter;

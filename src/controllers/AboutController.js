@@ -1,54 +1,13 @@
-const { portfolioValidations } = require("../utils/portfolioValidations");
+const { portfolioValidations } = require("../utils/protfolioValidations");
 const { AboutService } = require("../services");
 const { sendSuccessResponse } = require("../utils/customResponse");
 
 const createAbout = async (req, res, next) => {
   try {
-    const {
-      name,
-      title,
-      subTitle,
-      description,
-      quote,
-      exp_year,
-      address,
-      some_total,
-      phoneNumber,
-      contactEmail,
-      avatar,
-      alternateAvatars,
-    } = req.body.about;
-
-    const about = {
-      name,
-      title,
-      subTitle,
-      description,
-      quote,
-      exp_year,
-      address,
-      some_total,
-      phoneNumber,
-      contactEmail,
-      avatar,
-      alternateAvatars,
-    };
+    const { about } = req.body;
 
     //validate the abouts . Dont know if i want to validate about or direct req.body
-    await portfolioValidations(req.body.about, [
-      "name",
-      "title",
-      "subTitle",
-      "description",
-      "quote",
-      "exp_year",
-      "address",
-      "some_total",
-      "phoneNumber",
-      "contactEmail",
-      "avatar",
-      "alternateAvatars",
-    ]);
+    portfolioValidations({ about });
 
     const data = await AboutService.createAbout({ about });
 

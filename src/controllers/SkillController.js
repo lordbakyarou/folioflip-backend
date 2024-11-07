@@ -9,33 +9,12 @@ const createSkill = async (req, res, next) => {
       throw new BadRequest("Skills should be an array");
     }
 
-    const validatedskills = await Promise.all(
-      skills.map(async (skill) => {
-        const { enabled, name, sequence, percentage, image } = skill;
+    skills.map(async (skill) => {
+      // Validate each skill
+      portfolioValidations(skill);
+    });
 
-        // Create skill object
-        const skillData = {
-          enabled,
-          name,
-          sequence,
-          percentage,
-          image,
-        };
-
-        // Validate each skill
-        await portfolioValidations(skill, [
-          "enabled",
-          "name",
-          "sequence",
-          "percentage",
-          "image",
-        ]);
-
-        return skillData;
-      })
-    );
-
-    const data = await SkillService.createSkill({ skills: validatedskills });
+    const data = await SkillService.createSkill({ skills });
 
     sendSuccessResponse({
       res,
@@ -67,7 +46,7 @@ const updateSkill = async (req, res, next) => {
   try {
     const { skill, skillId } = req.body;
 
-    await portfolioValidations(skill, Object.keys(skill));
+    portfolioValidations(skill);
 
     const data = await SkillService.updateSkill({ skill, skillId });
     sendSuccessResponse({

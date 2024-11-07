@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const { sendSuccessResponse } = require("../utils/customResponse");
 const User = require("../models/User");
 const InternalServerError = require("../errors/serverError");
+const { validatePassword } = require("../utils/authUtils");
 
 //initiating
 const userRepository = new CURDRepository(User);
@@ -37,7 +38,7 @@ const loginUser = async ({ loginId, password }) => {
 
   if (!user) throw new NotFound("User with this loginId does not exist");
 
-  const isValidPassword = await user.validatePassword(password);
+  const isValidPassword = await validatePassword(password, user.password);
 
   if (!isValidPassword) throw new Unauthorized("Invalid password");
 

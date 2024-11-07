@@ -1,56 +1,45 @@
 const validator = require("validator");
+const { BadRequest } = require("../errors/httpErrors");
+const { isLength, isStrongPassword } = require("./commonUtils");
 
 const authValidation = (validationVariables, allowedValidationFields) => {
-  return new Promise((res, rej) => {
-    Object.keys(validationVariables).forEach((key) => {
-      const value = validationVariables[key] || "";
+  Object.keys(validationVariables).forEach((key) => {
+    const value = validationVariables[key] || "";
 
-      if (allowedValidationFields.includes(key)) {
-        if (key === "loginId") {
-          return (
-            (!validator.isEmail(value) ||
-              value.length < 3 ||
-              value.length > 50) &&
-            rej({
-              status: 400,
-              message: "Invalid loginId",
-            })
-          );
-        }
-
-        if (key === "email") {
-          return (
-            !validator.isEmail(value) &&
-            rej({ status: 400, message: "Email is not valid" })
-          );
-        }
-        if (key === "username") {
-          return (
+    if (allowedValidationFields.includes(key)) {
+      if (key === "loginId") {
+        return (
+          (!validator.isEmail(value) ||
             value.length < 3 ||
-            (value.length > 50 &&
-              rej({
-                status: 400,
-                message: "Username must be between 3 and 50 characters",
-              }))
-          );
-        }
-        if (key === "password") {
-          return (
-            !validator.isStrongPassword(value) &&
-            rej({ status: 400, message: "Password is not strong" })
-          );
-        }
-        if (key === "role") {
-          return (
-            value &&
-            !["admin", "user"].includes(value) &&
-            rej({ status: 400, message: "Invalid role" })
-          );
-        }
+            value.length > 50) &&
+          new BadRequest("Invalid id")
+        );
       }
-    });
 
-    res(validationVariables);
+      if (key === "email") {
+        return (
+          !validator.isEmail(value) && new BadRequest("Email id not valid")
+        );
+      }
+      if (key === "username") {
+        return (
+          isLength(value, 3, 50) &&
+          new BadRequest("Username must be between 3 and 50")
+        );
+      }
+      if (key === "password") {
+        return (
+          !isStrongPassword(value) && new BadRequest("Password is not strong")
+        );
+      }
+      if (key === "role") {
+        return (
+          value &&
+          !["admin", "user"].includes(value) &&
+          new BadRequest("Invalid role")
+        );
+      }
+    }
   });
 };
 

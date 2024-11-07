@@ -9,32 +9,12 @@ const createSocialHandle = async (req, res, next) => {
       throw new BadRequest("Social Handles should be an array");
     }
 
-    const validatedSocialHandles = await Promise.all(
-      socialHandles.map(async (socialHandle) => {
-        const { enabled, platform, url, image } = socialHandle;
-
-        // Create socialHandle object
-        const socialHandleData = {
-          enabled,
-          platform,
-          url,
-          image,
-        };
-
-        // Validate each socialHandle
-        await portfolioValidations(socialHandle, [
-          "enabled",
-          "platform",
-          "url",
-          "image",
-        ]);
-
-        return socialHandleData;
-      })
-    );
+    socialHandles.map(async (socialHandle) => {
+      portfolioValidations(socialHandle);
+    });
 
     const data = await SocialHandleService.createSocialHandle({
-      socialHandles: validatedSocialHandles,
+      socialHandles,
     });
 
     sendSuccessResponse({
@@ -67,12 +47,13 @@ const updateSocialHandle = async (req, res, next) => {
   try {
     const { socialHandle, socialHandleId } = req.body;
 
-    await portfolioValidations(socialHandle, Object.keys(socialHandle));
+    portfolioValidations(socialHandle);
 
     const data = await SocialHandleService.updateSocialHandle({
       socialHandle,
       socialHandleId,
     });
+
     sendSuccessResponse({
       res,
       data,

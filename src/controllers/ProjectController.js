@@ -1,7 +1,6 @@
-const mongoose = require("mongoose");
-const Project = require("../models/Project");
 const { BadRequest } = require("../errors/httpErrors");
 const { ProjectService } = require("../services");
+const { portfolioValidations } = require("../utils/protfolioValidations");
 
 const createProject = async (req, res, next) => {
   try {
@@ -11,53 +10,12 @@ const createProject = async (req, res, next) => {
       throw new BadRequest("Projects should be an array");
     }
 
-    const validatedProjects = await Promise.all(
-      projects.map(async (project) => {
-        const {
-          liveurl,
-          githuburl,
-          title,
-          sequence,
-          image,
-          description,
-          techStack,
-          enabled,
-        } = project;
-
-        // Create project object
-        const projectData = {
-          liveurl,
-          githuburl,
-          title,
-          sequence,
-          image,
-          description,
-          techStack,
-          enabled,
-        };
-
-        // Validate each project
-        await portfolioValidations(project, [
-          "name",
-          "title",
-          "subTitle",
-          "description",
-          "quote",
-          "exp_year",
-          "address",
-          "some_total",
-          "phoneNumber",
-          "contactEmail",
-          "avatar",
-          "alternateAvatars",
-        ]);
-
-        return projectData; // Return the validated project data
-      })
-    );
+    projects.map(async (project) => {
+      portfolioValidations(project);
+    });
 
     const data = await ProjectService.createProject({
-      projects: validatedProjects,
+      projects,
     });
 
     sendSuccessResponse({
@@ -90,7 +48,7 @@ const updateProject = async (req, res, next) => {
   try {
     const { project, projectId } = req.body;
 
-    await portfolioValidations(project, Object.keys(project));
+    portfolioValidations(project);
 
     const data = await ProjectService.updateProject({ project, projectId });
     sendSuccessResponse({

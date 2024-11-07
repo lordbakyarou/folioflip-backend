@@ -9,34 +9,13 @@ const createTestimonial = async (req, res, next) => {
       throw new BadRequest("Testimonials should be an array");
     }
 
-    const validatedTestimonials = await Promise.all(
-      testimonials.map(async (testimonial) => {
-        const { enabled, image, name, review, position } = testimonial;
-
-        // Create testimonial object
-        const testimonialData = {
-          enabled,
-          image,
-          name,
-          review,
-          position,
-        };
-
-        // Validate each testimonial
-        await portfolioValidations(testimonial, [
-          "enabled",
-          "image",
-          "name",
-          "review",
-          "position",
-        ]);
-
-        return testimonialData;
-      })
-    );
+    testimonials.map(async (testimonial) => {
+      // Validate each testimonial
+      portfolioValidations(testimonial);
+    });
 
     const data = await TestimonialService.createTestimonial({
-      testimonials: validatedTestimonials,
+      testimonials,
     });
 
     sendSuccessResponse({
@@ -69,7 +48,7 @@ const updateTestimonial = async (req, res, next) => {
   try {
     const { testimonial, testimonialId } = req.body;
 
-    await portfolioValidations(testimonial, Object.keys(testimonial));
+    portfolioValidations(testimonial);
 
     const data = await TestimonialService.updateTestimonial({
       testimonial,
