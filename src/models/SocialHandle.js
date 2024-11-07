@@ -4,11 +4,6 @@ const validator = require("validator");
 
 const SocialHandlesSchema = new Schema(
   {
-    portfolioId: {
-      type: Schema.Types.ObjectId,
-      ref: "Portfolio",
-      required: [true, "User ID is required"],
-    },
     platform: {
       type: String,
       required: [true, "Platform is required"],

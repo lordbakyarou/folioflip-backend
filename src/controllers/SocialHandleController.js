@@ -1,17 +1,14 @@
 const { BadRequest } = require("../errors/httpErrors");
 const { SocialHandleService } = require("../services");
+const { isArray } = require("../utils/commonUtils");
+const { sendSuccessResponse } = require("../utils/customResponse");
+const { portfolioValidations } = require("../utils/protfolioValidations");
 
 const createSocialHandle = async (req, res, next) => {
   try {
     const { socialHandles } = req.body;
 
-    if (!Array.isArray(socialHandles)) {
-      throw new BadRequest("Social Handles should be an array");
-    }
-
-    socialHandles.map(async (socialHandle) => {
-      portfolioValidations(socialHandle);
-    });
+    portfolioValidations({ socialHandles });
 
     const data = await SocialHandleService.createSocialHandle({
       socialHandles,
@@ -47,7 +44,10 @@ const updateSocialHandle = async (req, res, next) => {
   try {
     const { socialHandle, socialHandleId } = req.body;
 
-    portfolioValidations(socialHandle);
+    if (isArray(socialHandle))
+      throw new BadRequest("Social handle cannot be an array");
+
+    portfolioValidations({ socialHandles: [socialHandle] });
 
     const data = await SocialHandleService.updateSocialHandle({
       socialHandle,

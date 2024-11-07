@@ -37,7 +37,7 @@ const updateSocialHandle = async ({ socialHandle, socialHandleId }) => {
   try {
     const data = await socialHandleRepository.findOneAndUpdate(
       { _id: socialHandleId },
-      { socialHandle }
+      { $set: socialHandle }
     );
 
     return data;
