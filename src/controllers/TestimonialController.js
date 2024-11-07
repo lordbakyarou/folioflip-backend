@@ -1,18 +1,14 @@
 const { BadRequest } = require("../errors/httpErrors");
 const { TestimonialService } = require("../services");
+const { isArray } = require("../utils/commonUtils");
+const { sendSuccessResponse } = require("../utils/customResponse");
+const { portfolioValidations } = require("../utils/protfolioValidations");
 
 const createTestimonial = async (req, res, next) => {
   try {
     const { testimonials } = req.body;
 
-    if (!Array.isArray(testimonials)) {
-      throw new BadRequest("Testimonials should be an array");
-    }
-
-    testimonials.map(async (testimonial) => {
-      // Validate each testimonial
-      portfolioValidations(testimonial);
-    });
+    portfolioValidations({ testimonials });
 
     const data = await TestimonialService.createTestimonial({
       testimonials,
@@ -48,7 +44,10 @@ const updateTestimonial = async (req, res, next) => {
   try {
     const { testimonial, testimonialId } = req.body;
 
-    portfolioValidations(testimonial);
+    if (isArray(testimonial))
+      throw new BadRequest("Testimonial cannot be an array");
+
+    portfolioValidations({ testimonials: [testimonial] });
 
     const data = await TestimonialService.updateTestimonial({
       testimonial,

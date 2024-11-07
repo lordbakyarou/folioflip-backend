@@ -37,7 +37,7 @@ const updateTimeline = async ({ timeline, timelineId }) => {
   try {
     const data = await timelineRepository.findOneAndUpdate(
       { _id: timelineId },
-      { timeline }
+      { $set: timeline }
     );
 
     return data;

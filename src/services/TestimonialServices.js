@@ -37,7 +37,7 @@ const updateTestimonial = async ({ testimonial, testimonialId }) => {
   try {
     const data = await testimonialRepository.findOneAndUpdate(
       { _id: testimonialId },
-      { testimonial }
+      { $set: testimonial }
     );
 
     return data;

@@ -1,18 +1,14 @@
 const { BadRequest } = require("../errors/httpErrors");
 const { TimelineService } = require("../services");
+const { isArray } = require("../utils/commonUtils");
+const { sendSuccessResponse } = require("../utils/customResponse");
+const { portfolioValidations } = require("../utils/protfolioValidations");
 
 const createTimeline = async (req, res, next) => {
   try {
     const { timelines } = req.body;
 
-    if (!Array.isArray(timelines)) {
-      throw new BadRequest("Timelines should be an array");
-    }
-
-    timelines.map(async (timeline) => {
-      // Validate each timeline
-      portfolioValidations(timeline);
-    });
+    portfolioValidations({ timelines });
 
     const data = await TimelineService.createTimeline({
       timelines,
@@ -48,7 +44,9 @@ const updateTimeline = async (req, res, next) => {
   try {
     const { timeline, timelineId } = req.body;
 
-    portfolioValidations(timeline);
+    if (isArray(timeline)) throw new BadRequest("Timeline cannot be an array");
+
+    portfolioValidations({ timelines: [timeline] });
 
     const data = await TimelineService.updateTimeline({
       timeline,

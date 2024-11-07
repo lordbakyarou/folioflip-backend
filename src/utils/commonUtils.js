@@ -20,7 +20,7 @@ const isEmail = (value) => validator.isEmail(value);
 
 const isURL = (value) => value && validator.isURL(value);
 
-const isDate = (value) => validator.isISO8601(value);
+const isDate = (value) => value && validator.isISO8601(value);
 
 const isValidPercentage = (value) => value > 0 && value < 100;
 

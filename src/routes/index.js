@@ -6,6 +6,8 @@ const ProjectRouter = require("./ProjectRouter");
 const ServiceRouter = require("./ServiceRouter");
 const SkillRouter = require("./SkillRouter");
 const SocialhandleRouter = require("./SocialHandleRouter");
+const TestimonialRouter = require("./TestimonialRouter");
+const TimelineRouter = require("./TimelineRouter");
 
 const apiRouter = express.Router();
 
@@ -16,5 +18,7 @@ apiRouter.use("/project", ProjectRouter);
 apiRouter.use("/service", ServiceRouter);
 apiRouter.use("/skill", SkillRouter);
 apiRouter.use("/socialhandle", SocialhandleRouter);
+apiRouter.use("/testimonial", TestimonialRouter);
+apiRouter.use("/timeline", TimelineRouter);
 
 module.exports = apiRouter;

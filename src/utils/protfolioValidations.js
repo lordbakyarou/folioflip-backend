@@ -16,7 +16,7 @@ const {
 const portfolioValidations = ({
   portfolioName,
   about,
-  timeline,
+  timelines,
   skills,
   projects,
   social_handles,
@@ -31,8 +31,8 @@ const portfolioValidations = ({
   if (about) {
     aboutValidation(about);
   }
-  if (timeline?.length > 0) {
-    timeline?.map((t) => timelineValidation(t));
+  if (timelines?.length > 0) {
+    timelines?.map((t) => timelineValidation(t));
   }
   if (skills?.length > 0) {
     skills.map((s) => skillsValidation(s));
@@ -133,7 +133,7 @@ const timelineValidation = (timeline) => {
   if (!timeline) throw new BadRequest("Timeline section is required");
   // Validate company name
   if (
-    checkInObject("company_name", timeline) ||
+    checkInObject("company_name", timeline) &&
     !isLength(timeline?.company_name, 3, 50)
   ) {
     throw new BadRequest(
@@ -142,18 +142,18 @@ const timelineValidation = (timeline) => {
   }
   // Validate summary
   if (
-    checkInObject("summary", timeline) ||
+    checkInObject("summary", timeline) &&
     !isLength(timeline?.summary, 3, 200)
   ) {
     throw new BadRequest("Summary must be between 3 and 200 characters long");
   }
   // Validate sequence
-  if (checkInObject("sequence", timeline) || timeline?.sequence < 1) {
+  if (checkInObject("sequence", timeline) && timeline?.sequence < 1) {
     //not taking numbers why?
     throw new BadRequest("Sequence must be at least 1");
   }
   // Validate start date
-  if (checkInObject("startDate", timeline) || !isDate(timeline?.startDate)) {
+  if (checkInObject("startDate", timeline) && !isDate(timeline?.startDate)) {
     throw new BadRequest("Invalid start date format");
   }
   // Validate end date
@@ -173,14 +173,14 @@ const timelineValidation = (timeline) => {
   }
   // Validate job title
   if (
-    checkInObject("jobTitle", timeline) ||
+    checkInObject("jobTitle", timeline) &&
     !isLength(timeline?.jobTitle, 3, 50)
   ) {
     throw new BadRequest("Job title must be between 3 and 50 characters long");
   }
   // Validate job location
   if (
-    checkInObject("jobLocation", timeline) ||
+    checkInObject("jobLocation", timeline) &&
     !isLength(timeline?.jobLocation, 3, 50)
   ) {
     throw new BadRequest(
@@ -188,13 +188,20 @@ const timelineValidation = (timeline) => {
     );
   }
   // Validate bullet points
-  if (!isArray(timeline?.bulletPoints) && timeline?.bulletPoints.length === 0) {
+  if (
+    checkInObject("bulletPoints", timeline) &&
+    !isArray(timeline?.bulletPoints) &&
+    timeline?.bulletPoints.length === 0
+  ) {
     throw new BadRequest("Bullet points must contain at least one item");
   }
   // Validate boolean fields
-  if (!isBoolean(timeline?.forEducation))
+  if (
+    checkInObject("forEducation", timeline) &&
+    !isBoolean(timeline?.forEducation)
+  )
     throw new BadRequest("For education must be a boolean value");
-  if (!isBoolean(timeline?.enabled))
+  if (checkInObject("enabled", timeline) && !isBoolean(timeline?.enabled))
     throw new BadRequest("Enabled must be a boolean value");
 };
 
@@ -288,24 +295,34 @@ const socialHandleValidation = (social_handle) => {
   // Check if the social_handle object exists
   if (!social_handle) throw new BadRequest("Social handle section is required");
   // Validate platform
-  if (!social_handle?.platform || !isLength(social_handle?.platform, 2, 50)) {
+  if (
+    checkInObject("platform", social_handle) &&
+    !isLength(social_handle?.platform, 2, 50)
+  ) {
     throw new BadRequest(
       "Platform name must be between 3 and 50 characters long"
     );
   }
   // Validate URL
-  if (!social_handle?.url || !validator.isURL(social_handle?.url)) {
+  if (
+    checkInObject("url", social_handle) &&
+    !validator.isURL(social_handle?.url)
+  ) {
     throw new BadRequest("Invalid URL format");
   }
-  // Validate image
-  if (!social_handle?.image || !social_handle?.image.public_id) {
-    throw new BadRequest("Image public ID is required");
-  }
-  if (!social_handle?.image.url || !isURL(social_handle?.image.url)) {
+
+  if (
+    checkInObject("image", social_handle) &&
+    !checkInObject("url", social_handle?.image) &&
+    !isURL(social_handle?.image.url)
+  ) {
     throw new BadRequest("Image URL is required and must be a valid URL");
   }
   // Validate enabled field
-  if (!isBoolean(social_handle?.enabled)) {
+  if (
+    checkInObject("enabled", social_handle) &&
+    !isBoolean(social_handle?.enabled)
+  ) {
     throw new BadRequest("Enabled must be a boolean value");
   }
 };
@@ -346,40 +363,44 @@ const serviceValidation = (service) => {
 const testimonialValidation = (testimonial) => {
   // Check if the testimonial object exists
   if (!testimonial) throw new BadRequest("Testimonial section is required");
-  // Validate name
-  if (!testimonial?.name) {
-    throw new BadRequest("Testimonial name is required");
-  }
-  if (!isLength(testimonial?.name, 2, 50)) {
+
+  if (
+    checkInObject("name", testimonial) &&
+    !isLength(testimonial?.name, 2, 50)
+  ) {
     throw new BadRequest(
       "Testimonial name must be between 2 and 50 characters long"
     );
   }
-  // Validate review
-  if (!testimonial?.review) {
-    throw new BadRequest("Review is required");
-  }
-  if (!isLength(testimonial?.review, 10, 500)) {
+
+  if (
+    checkInObject("review", testimonial) &&
+    !isLength(testimonial?.review, 10, 500)
+  ) {
     throw new BadRequest(
       "Testimonial review must be between 10 and 500 characters long"
     );
   }
-  // Validate position
-  if (!testimonial?.position) {
-    throw new BadRequest("Position is required");
-  }
-  if (!isLength(testimonial?.position, 2, 50)) {
+
+  if (
+    checkInObject("position", testimonial) &&
+    !isLength(testimonial?.position, 2, 50)
+  ) {
     throw new BadRequest("Position must be between 2 and 50 characters long");
   }
-  // Validate image
-  if (!testimonial?.image || !testimonial?.image?.public_id) {
-    throw new BadRequest("Image public ID is required");
-  }
-  if (!testimonial?.image?.url || !isURL(testimonial?.image?.url)) {
+
+  if (
+    checkInObject("image", testimonial) &&
+    !checkInObject("url", testimonial.image) &&
+    !isURL(testimonial?.image?.url)
+  ) {
     throw new BadRequest("Image URL is required and must be a valid URL");
   }
   // Validate enabled field
-  if (!isBoolean(testimonial?.enabled)) {
+  if (
+    checkInObject("enabled", testimonial) &&
+    !isBoolean(testimonial?.enabled)
+  ) {
     throw new BadRequest("Enabled must be a boolean value");
   }
 };
