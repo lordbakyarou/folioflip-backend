@@ -11,7 +11,8 @@ const isNumber = (value) => typeof value === "number";
 
 const isBoolean = (value) => typeof value === "boolean";
 
-const isLength = (value, min = 0, max = 1000) => value >= min && value <= max;
+const isLength = (value, min = 0, max = 1000) =>
+  value.length >= min && value.length <= max;
 
 const isMobilePhone = (value) => validator.isMobilePhone(value, "any");
 

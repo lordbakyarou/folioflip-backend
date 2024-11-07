@@ -1,5 +1,6 @@
 const { Schema, model } = require("mongoose");
 const validator = require("validator");
+const { isArray } = require("../utils/commonUtils");
 
 const ProjectSchema = new Schema(
   {
@@ -34,11 +35,10 @@ const ProjectSchema = new Schema(
     image: {
       public_id: {
         type: String,
-        required: [true, "Image public ID is required"],
       },
       url: {
         type: String,
-        required: [true, "Image URL is required"],
+        // required: [true, "Image URL is required"], //maybe add default values here
         validate: {
           validator: (value) => validator.isURL(value),
           message: "Invalid Image URL format",
@@ -54,10 +54,10 @@ const ProjectSchema = new Schema(
     },
     techStack: {
       type: [String],
-      validate: {
-        validator: (value) => Array.isArray(value) && value.length > 0,
-        message: "Tech stack must contain at least one technology",
-      },
+      // validate: {
+      //   validator: (value) => isArray(value) && value.length > 0,
+      //   message: "Tech stack must contain at least one technology", //do this to for update part
+      // },
     },
     enabled: {
       type: Boolean,

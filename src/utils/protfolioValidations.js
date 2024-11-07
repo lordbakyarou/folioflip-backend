@@ -132,41 +132,57 @@ const timelineValidation = (timeline) => {
   // Check if the timeline object exists
   if (!timeline) throw new BadRequest("Timeline section is required");
   // Validate company name
-  if (!timeline?.company_name || !isLength(timeline?.company_name, 3, 50)) {
+  if (
+    checkInObject("company_name", timeline) ||
+    !isLength(timeline?.company_name, 3, 50)
+  ) {
     throw new BadRequest(
       "Timeline company name between 3 and 50 characters long"
     );
   }
   // Validate summary
-  if (!timeline?.summary || !isLength(timeline?.summary, 3, 200)) {
+  if (
+    checkInObject("summary", timeline) ||
+    !isLength(timeline?.summary, 3, 200)
+  ) {
     throw new BadRequest("Summary must be between 3 and 200 characters long");
   }
   // Validate sequence
-  if (!isNumber(timeline?.sequence) || timeline?.sequence < 1) {
+  if (checkInObject("sequence", timeline) || timeline?.sequence < 1) {
     //not taking numbers why?
     throw new BadRequest("Sequence must be at least 1");
   }
   // Validate start date
-  if (!timeline?.startDate || !isDate(timeline?.startDate)) {
+  if (checkInObject("startDate", timeline) || !isDate(timeline?.startDate)) {
     throw new BadRequest("Invalid start date format");
   }
   // Validate end date
-  if (timeline?.endDate && !isDate(timeline?.endDate)) {
+  if (
+    checkInObject("startDate", timeline) &&
+    !checkInObject("endDate", timeline) &&
+    !isDate(timeline?.endDate)
+  ) {
     throw new BadRequest("Invalid end date format");
   }
   // Check that the end date is after the start date
   if (
-    timeline?.endDate &&
+    checkInObject("endDate", timeline) &&
     new Date(timeline?.endDate) <= new Date(timeline?.startDate)
   ) {
     throw new BadRequest("End date must be after the start date");
   }
   // Validate job title
-  if (!timeline?.jobTitle || !isLength(timeline?.jobTitle, 3, 50)) {
+  if (
+    checkInObject("jobTitle", timeline) ||
+    !isLength(timeline?.jobTitle, 3, 50)
+  ) {
     throw new BadRequest("Job title must be between 3 and 50 characters long");
   }
   // Validate job location
-  if (!timeline?.jobLocation || !isLength(timeline?.jobLocation, 3, 50)) {
+  if (
+    checkInObject("jobLocation", timeline) ||
+    !isLength(timeline?.jobLocation, 3, 50)
+  ) {
     throw new BadRequest(
       "Job location must be between 3 and 50 characters long"
     );
@@ -215,42 +231,47 @@ const projectValidation = (project) => {
   // Check if the project object exists
   if (!project) throw new BadRequest("Project section is required");
   // Validate title
-  if (!project?.title || !isLength(project?.title, 3, 50)) {
+  if (checkInObject("title", project) && !isLength(project?.title, 3, 50)) {
     throw new BadRequest(
       "Project title must be between 3 and 50 characters long"
     );
   }
   // Validate live URL
-  if (!project?.liveurl || !isURL(project?.liveurl)) {
+  if (checkInObject("liveurl", project) && !isURL(project?.liveurl)) {
     throw new BadRequest("Invalid Live URL format");
   }
   // Validate GitHub URL
-  if (project?.githuburl && !isURL(project?.githuburl)) {
+  if (checkInObject("githuburl", project) && !isURL(project?.githuburl)) {
     throw new BadRequest("Invalid GitHub URL format");
   }
   // Validate sequence
-  if (!isNumber(project?.sequence) || project?.sequence < 1) {
+  if (!isNumber(project?.sequence) && project?.sequence < 1) {
     throw new BadRequest("Sequence must be at least 1");
   }
-  // Validate image
-  if (!project?.image || !project?.image?.public_id) {
-    throw new BadRequest("Image public ID is required");
-  }
-  if (!project?.image?.url || !isURL(project?.image?.url)) {
+
+  if (
+    checkInObject("image", project) &&
+    !checkInObject("url", project.image) &&
+    !isURL(project?.image?.url)
+  ) {
+    //tbd
     throw new BadRequest("Image URL is required and must be a valid URL");
   }
   // Validate description
-  if (!project?.description || !isLength(project?.description, 10, 500)) {
+  if (
+    checkInObject("description", project) &&
+    !isLength(project?.description, 10, 500)
+  ) {
     throw new BadRequest(
       "Description must be between 10 and 500 characters long"
     );
   }
   // Validate tech stack
-  if (!isArray(project?.techStack) || project?.techStack?.length === 0) {
+  if (!isArray(project?.techStack) && project?.techStack?.length === 0) {
     throw new BadRequest("Tech stack must contain at least one technology");
   }
   // Validate enabled field
-  if (typeof project?.enabled !== "boolean") {
+  if (checkInObject("enabled", project) && !isBoolean(project?.enabled)) {
     throw new BadRequest("Enabled must be a boolean value");
   }
 };

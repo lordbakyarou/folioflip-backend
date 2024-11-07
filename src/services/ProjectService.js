@@ -1,8 +1,13 @@
-const { BadRequest, NotFound } = require("../errors/httpErrors");
+const {
+  BadRequest,
+  NotFound,
+  InternalServerError,
+} = require("../errors/httpErrors");
 const Project = require("../models/Project");
 const CURDRepository = require("../repository/CURDRepository");
 
 const projectRepository = new CURDRepository(Project);
+
 const createProject = async ({ projects }) => {
   try {
     if (!projects) {
@@ -32,7 +37,7 @@ const updateProject = async ({ project, projectId }) => {
   try {
     const data = await projectRepository.findOneAndUpdate(
       { _id: projectId },
-      { project }
+      { $set: project }
     );
 
     return data;

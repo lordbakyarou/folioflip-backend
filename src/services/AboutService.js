@@ -1,5 +1,8 @@
-const { NotFound, BadRequest } = require("../errors/httpErrors");
-const InternalServerError = require("../errors/serverError");
+const {
+  NotFound,
+  BadRequest,
+  InternalServerError,
+} = require("../errors/httpErrors");
 const About = require("../models/About");
 const CURDRepository = require("../repository/CURDRepository");
 

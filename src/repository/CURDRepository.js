@@ -1,8 +1,3 @@
-const {
-  sendErrorResponse,
-  sendSuccessResponse,
-} = require("../utils/customResponse");
-
 class CURDRepository {
   constructor(model) {
     this.model = model;

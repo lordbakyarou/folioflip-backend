@@ -1,18 +1,18 @@
 const { BadRequest } = require("../errors/httpErrors");
 const { ProjectService } = require("../services");
+const { isArray, isObject } = require("../utils/commonUtils");
+const { sendSuccessResponse } = require("../utils/customResponse");
 const { portfolioValidations } = require("../utils/protfolioValidations");
 
 const createProject = async (req, res, next) => {
   try {
     const { projects } = req.body;
 
-    if (!Array.isArray(projects)) {
+    if (!isArray(projects)) {
       throw new BadRequest("Projects should be an array");
     }
 
-    projects.map(async (project) => {
-      portfolioValidations(project);
-    });
+    portfolioValidations({ projects });
 
     const data = await ProjectService.createProject({
       projects,
@@ -48,9 +48,14 @@ const updateProject = async (req, res, next) => {
   try {
     const { project, projectId } = req.body;
 
-    portfolioValidations(project);
+    if (isArray(project)) {
+      throw new BadRequest("Project cannot be an array");
+    }
+
+    portfolioValidations({ projects: [project] });
 
     const data = await ProjectService.updateProject({ project, projectId });
+
     sendSuccessResponse({
       res,
       data,
