@@ -16,6 +16,7 @@ const createAbout = async ({ about }) => {
     }
 
     const data = await aboutRepository.create(about);
+
     return data;
   } catch (error) {
     throw new InternalServerError(error.message);

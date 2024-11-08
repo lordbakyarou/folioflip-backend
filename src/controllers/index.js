@@ -7,4 +7,5 @@ module.exports = {
   SocialHandleController: require("./SocialHandleController"),
   TestimonialController: require("./TestimonialController"),
   TimelineController: require("./TimelineController"),
+  PortfolioController: require("./PortfolioController"),
 };

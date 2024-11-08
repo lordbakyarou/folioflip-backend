@@ -15,6 +15,7 @@ const {
 
 const portfolioValidations = ({
   portfolioName,
+  clientPortfolioId,
   about,
   timelines,
   skills,
@@ -25,6 +26,12 @@ const portfolioValidations = ({
 }) => {
   if (!!portfolioName && !isLength(portfolioName, 3, 50)) {
     throw new BadRequest("Portfolio name must be between 3 & 50");
+  }
+
+  if (!!clientPortfolioId && !isLength(clientPortfolioId, 3, 50)) {
+    throw new BadRequest(
+      "Client portfolio id must be between 3 and 50 characters long"
+    );
   }
 
   // Call validations for each section

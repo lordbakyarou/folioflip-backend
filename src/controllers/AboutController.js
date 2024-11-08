@@ -1,5 +1,5 @@
 const { portfolioValidations } = require("../utils/protfolioValidations");
-const { AboutService } = require("../services");
+const { AboutService, PortfolioService } = require("../services");
 const { sendSuccessResponse } = require("../utils/customResponse");
 
 const createAbout = async (req, res, next) => {
@@ -10,6 +10,8 @@ const createAbout = async (req, res, next) => {
     portfolioValidations({ about });
 
     const data = await AboutService.createAbout({ about });
+
+    // await PortfolioService.updatePortfolioRefs({ refIdData: data._id });
 
     sendSuccessResponse({
       res,

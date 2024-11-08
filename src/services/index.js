@@ -7,4 +7,5 @@ module.exports = {
   SocialHandleService: require("./SocialHandle"),
   TestimonialService: require("./TestimonialServices"),
   TimelineService: require("./TimelineService"),
+  PortfolioService: require("./PortfolioService"),
 };

@@ -30,6 +30,7 @@ class CURDRepository {
         updateData,
         options
       );
+
       return updatedData;
     } catch (error) {
       throw error;

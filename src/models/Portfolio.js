@@ -1,6 +1,4 @@
 const { Schema, model } = require("mongoose");
-const Skill = require("./Skill");
-
 //Should we add default values to all of them?
 const PortfolioSchema = new Schema(
   {
@@ -11,6 +9,11 @@ const PortfolioSchema = new Schema(
       minLength: [3, "Name must be at least 3 characters"],
       maxLength: [50, "Name must be less than 50 characters"],
     },
+    clientPortfolioId: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     userId: {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -20,7 +23,7 @@ const PortfolioSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "About",
     },
-    prjects: [
+    projects: [
       {
         type: Schema.Types.ObjectId,
         ref: "Project",
@@ -44,7 +47,7 @@ const PortfolioSchema = new Schema(
         ref: "Timeline",
       },
     ],
-    testimonial: [
+    testimonials: [
       {
         type: Schema.Types.ObjectId,
         ref: "Testimonial",

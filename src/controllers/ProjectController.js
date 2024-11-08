@@ -1,12 +1,14 @@
 const { BadRequest } = require("../errors/httpErrors");
-const { ProjectService } = require("../services");
+const { ProjectService, PortfolioService } = require("../services");
 const { isArray, isObject } = require("../utils/commonUtils");
 const { sendSuccessResponse } = require("../utils/customResponse");
 const { portfolioValidations } = require("../utils/protfolioValidations");
 
 const createProject = async (req, res, next) => {
   try {
-    const { projects } = req.body;
+    const { projects, portfolioId } = req.body;
+
+    if (!portfolioId) throw new BadRequest("PortfolioId is not present");
 
     if (!isArray(projects)) {
       throw new BadRequest("Projects should be an array");
@@ -16,6 +18,13 @@ const createProject = async (req, res, next) => {
 
     const data = await ProjectService.createProject({
       projects,
+    });
+
+    const refIdData = { projects: data.map((i) => i._id) };
+
+    await PortfolioService.updatePortfolioRefs({
+      refIdData,
+      portfolioId,
     });
 
     sendSuccessResponse({

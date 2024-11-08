@@ -20,5 +20,6 @@ apiRouter.use("/skill", SkillRouter);
 apiRouter.use("/socialhandle", SocialhandleRouter);
 apiRouter.use("/testimonial", TestimonialRouter);
 apiRouter.use("/timeline", TimelineRouter);
+apiRouter.use("/portfolio", PortfolioRouter);
 
 module.exports = apiRouter;
