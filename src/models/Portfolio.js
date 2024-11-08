@@ -22,6 +22,7 @@ const PortfolioSchema = new Schema(
     about: {
       type: Schema.Types.ObjectId,
       ref: "About",
+      default: null,
     },
     projects: [
       {
@@ -41,7 +42,7 @@ const PortfolioSchema = new Schema(
         ref: "Service",
       },
     ],
-    timeline: [
+    timelines: [
       {
         type: Schema.Types.ObjectId,
         ref: "Timeline",

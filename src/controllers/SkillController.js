@@ -6,11 +6,24 @@ const { portfolioValidations } = require("../utils/protfolioValidations");
 
 const createSkill = async (req, res, next) => {
   try {
-    const { skills } = req.body;
+    const { skills, portfolioId } = req.body;
+
+    if (!portfolioId) throw new BadRequest("PortfolioId is not present");
+
+    if (!isArray(skills)) {
+      throw new BadRequest("Skills should be an array");
+    }
 
     portfolioValidations({ skills });
 
     const data = await SkillService.createSkill({ skills });
+
+    const refIdData = { skills: data.map((i) => i._id) };
+
+    await PortfolioService.updatePortfolioRefs({
+      refIdData,
+      portfolioId,
+    });
 
     sendSuccessResponse({
       res,

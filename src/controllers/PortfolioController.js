@@ -3,6 +3,7 @@ const Portfolio = require("../models/Portfolio");
 const { PortfolioService } = require("../services");
 const { isArray } = require("../utils/commonUtils");
 const { sendSuccessResponse } = require("../utils/customResponse");
+const { portfolioValidations } = require("../utils/protfolioValidations");
 
 const createPortfolio = async (req, res, next) => {
   try {
@@ -10,7 +11,7 @@ const createPortfolio = async (req, res, next) => {
 
     portfolioValidations({ portfolioName, clientPortfolioId });
 
-    const { _id: userId } = req.body.user;
+    const { _id: userId } = req.user;
 
     const data = await PortfolioService.createPortfolio({
       portfolioName,
@@ -63,6 +64,7 @@ const updatePortfolio = async (req, res, next) => {
       portfolio,
       portfolioId,
     });
+
     sendSuccessResponse({
       res,
       data,

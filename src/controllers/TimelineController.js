@@ -6,12 +6,25 @@ const { portfolioValidations } = require("../utils/protfolioValidations");
 
 const createTimeline = async (req, res, next) => {
   try {
-    const { timelines } = req.body;
+    const { timelines, portfolioId } = req.body;
+
+    if (!portfolioId) throw new BadRequest("PortfolioId is not present");
+
+    if (!isArray(timelines)) {
+      throw new BadRequest("Timelines should be an array");
+    }
 
     portfolioValidations({ timelines });
 
     const data = await TimelineService.createTimeline({
       timelines,
+    });
+
+    const refIdData = { timelines: data.map((i) => i._id) };
+
+    await PortfolioService.updatePortfolioRefs({
+      refIdData,
+      portfolioId,
     });
 
     sendSuccessResponse({

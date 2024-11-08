@@ -56,17 +56,17 @@ const updatePortfolio = async ({ portfolio, portfolioId }) => {
 
 const updatePortfolioRefs = async ({ refIdData, portfolioId }) => {
   try {
-    //find if i am updating a object or array
-    //write a query for that
-    //update them
-
     const data = await portfolioRepository.findOneAndUpdate(
       {
         _id: portfolioId,
       },
-      {
-        $set: refIdData,
-      }
+      isArray(refIdData)
+        ? {
+            $push: refIdData,
+          }
+        : {
+            $set: refIdData,
+          }
     );
 
     return data;

@@ -6,12 +6,25 @@ const { portfolioValidations } = require("../utils/protfolioValidations");
 
 const createSocialHandle = async (req, res, next) => {
   try {
-    const { socialHandles } = req.body;
+    const { socialHandles, portfolioId } = req.body;
+
+    if (!portfolioId) throw new BadRequest("PortfolioId is not present");
+
+    if (!isArray(socialHandles)) {
+      throw new BadRequest("Social Handle should be an array");
+    }
 
     portfolioValidations({ socialHandles });
 
     const data = await SocialHandleService.createSocialHandle({
       socialHandles,
+    });
+
+    const refIdData = { socialHandles: data.map((i) => i._id) };
+
+    await PortfolioService.updatePortfolioRefs({
+      refIdData,
+      portfolioId,
     });
 
     sendSuccessResponse({

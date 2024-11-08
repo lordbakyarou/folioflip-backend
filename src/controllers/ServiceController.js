@@ -1,19 +1,32 @@
 const mongoose = require("mongoose");
 const Service = require("../models/Service");
 const { BadRequest } = require("../errors/httpErrors");
-const { ServiceService } = require("../services");
+const { ServiceService, PortfolioService } = require("../services");
 const { portfolioValidations } = require("../utils/protfolioValidations");
 const { sendSuccessResponse } = require("../utils/customResponse");
 const { isArray } = require("../utils/commonUtils");
 
 const createService = async (req, res, next) => {
   try {
-    const { services } = req.body;
+    const { services, portfolioId } = req.body;
+
+    if (!portfolioId) throw new BadRequest("PortfolioId is not present");
+
+    if (!isArray(services)) {
+      throw new BadRequest("Services should be an array");
+    }
 
     portfolioValidations({ services });
 
     const data = await ServiceService.createService({
       services,
+    });
+
+    const refIdData = { services: data.map((i) => i._id) };
+
+    await PortfolioService.updatePortfolioRefs({
+      refIdData,
+      portfolioId,
     });
 
     sendSuccessResponse({

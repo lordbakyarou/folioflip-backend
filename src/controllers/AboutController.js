@@ -4,14 +4,21 @@ const { sendSuccessResponse } = require("../utils/customResponse");
 
 const createAbout = async (req, res, next) => {
   try {
-    const { about } = req.body;
+    const { about, portfolioId } = req.body;
+
+    if (!portfolioId) throw new BadRequest("PortfolioId is not present");
 
     //validate the abouts . Dont know if i want to validate about or direct req.body
     portfolioValidations({ about });
 
     const data = await AboutService.createAbout({ about });
 
-    // await PortfolioService.updatePortfolioRefs({ refIdData: data._id });
+    const refIdData = { about: data._id };
+
+    await PortfolioService.updatePortfolioRefs({
+      refIdData,
+      portfolioId,
+    });
 
     sendSuccessResponse({
       res,

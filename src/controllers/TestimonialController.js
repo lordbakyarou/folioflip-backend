@@ -6,12 +6,25 @@ const { portfolioValidations } = require("../utils/protfolioValidations");
 
 const createTestimonial = async (req, res, next) => {
   try {
-    const { testimonials } = req.body;
+    const { testimonials, portfolioId } = req.body;
+
+    if (!portfolioId) throw new BadRequest("PortfolioId is not present");
+
+    if (!isArray(testimonials)) {
+      throw new BadRequest("Testimonials should be an array");
+    }
 
     portfolioValidations({ testimonials });
 
     const data = await TestimonialService.createTestimonial({
       testimonials,
+    });
+
+    const refIdData = { testimonials: data.map((i) => i._id) };
+
+    await PortfolioService.updatePortfolioRefs({
+      refIdData,
+      portfolioId,
     });
 
     sendSuccessResponse({
