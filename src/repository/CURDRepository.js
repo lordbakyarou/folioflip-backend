@@ -59,6 +59,15 @@ class CURDRepository {
       throw error;
     }
   }
+
+  async findOneAndDelete(query = {}, options = {}) {
+    try {
+      const data = await this.model.findOneAndDelete(query, options);
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 module.exports = CURDRepository;
